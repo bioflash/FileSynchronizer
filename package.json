@@ -1,0 +1,38 @@
+{
+  "name": "file_compare",
+  "version": "1.0.0",
+  "description": "Compares files from one directory to another directory based on file size and modified time. Then allow copy from source to target",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --history-api-fallback",
+    "build": "webpack",
+    "start": "node server.js"
+  },
+  "author": "ywdeng@tw.ibm.com",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^0.21.0",
+    "babel-register": "^6.3.13",
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "log4js": "^0.6.29",
+    "md5": "^2.0.0"
+  },
+  "devDependencies": {
+    "angular": "^1.4.8",
+    "babel-loader": "^6.2.1",
+    "babel-preset-es2015": "^6.3.13",
+    "bootstrap": "^3.3.6",
+    "bootstrap-webpack": "0.0.5",
+    "css-loader": "^0.23.1",
+    "file-loader": "^0.8.5",
+    "html-webpack-plugin": "^1.7.0",
+    "imports-loader": "^0.6.5",
+    "jquery": "^2.1.4",
+    "raw-loader": "^0.5.1",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.11",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
