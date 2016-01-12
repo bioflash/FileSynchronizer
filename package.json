@@ -14,6 +14,7 @@
   "dependencies": {
     "archiver": "^0.21.0",
     "babel-register": "^6.3.13",
+    "biased-opener": "^0.2.7",
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
     "log4js": "^0.6.29",
