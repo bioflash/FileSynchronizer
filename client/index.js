@@ -105,7 +105,7 @@ fileSyncApp.directive('fileSync', [()=>{
                             <div class='row'>
                                 <span class='col-lg-1 glyphicon glyphicon-file' ng-show='diff.sourceName&&index.diffs[diff.file].type==="FILE"'/>
                                 <span class='col-lg-1 glyphicon glyphicon-folder-open' ng-show='diff.sourceName&&index.diffs[diff.file].type==="DIR"'/>
-                                <span class='col-lg-11' data-toggle="tooltip" title='Size:{{index.diffs[diff.file].sourceSize}}; Last Modified:{{index.diffs[diff.file].sourceTime| date:"MMM d, y h:mm:ss a Z"}}'>{{diff.sourceName}}</span>
+                                <span class='col-lg-11' data-toggle="tooltip" title='Size:{{index.diffs[diff.file].sourceSize}}; Last Modified:{{index.diffs[diff.file].sourceTime| date:"medium"}}'>{{diff.sourceName}}</span>
                             </div>
                         </div>
                         
@@ -116,7 +116,7 @@ fileSyncApp.directive('fileSync', [()=>{
                             <div class='row'>
                                 <span class='col-lg-1 glyphicon glyphicon-file' ng-show='diff.targetName&&index.diffs[diff.file].type==="FILE"'/>
                                 <span class='col-lg-1 glyphicon glyphicon-folder-open' ng-show='diff.targetName&&index.diffs[diff.file].type==="DIR"'/>
-                                <span class='col-lg-11' data-toggle="tooltip" title='Size:{{index.diffs[diff.file].targetSize}}; Last Modified:{{index.diffs[diff.file].targetTime| date:"MMM d, y h:mm:ss a Z"}}>{{diff.targetName}}</span>
+                                <span class='col-lg-11' data-toggle="tooltip" title='Size:{{index.diffs[diff.file].targetSize}}; Last Modified:{{index.diffs[diff.file].targetTime| date:"medium"}}'>{{diff.targetName}}</span>
                             </div>
                         </div>
                     </div>
