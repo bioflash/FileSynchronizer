@@ -14,6 +14,7 @@ const syncMgr = require('./lib/SyncFileManager');
 const comapreFunction = syncMgr.compare.byMd5;
 
 const app = express();
+
 app.use(express.static(path.join(__dirname, 'client')));
 app.use(bodyParser.json({limit:1000000}));
 app.get('/api/findDifference', (req, resp)=>{
@@ -44,6 +45,11 @@ app.post('/api/applyChange', (req,resp)=>{
 });
 app.listen(port,()=>{
             log.info('server started at port', port);
-            biasedOpener('http://localhost:'+port+'/', {preferredBrowsers:['chrome', 'firefox']});
+            if (process.argv[2] && process.argv[3]){
+                biasedOpener(`http://localhost:${port}/?sourceDir=${process.argv[2]}&targetDir=${process.argv[3]}`, {preferredBrowsers:['chrome', 'firefox']});    
+            }else{
+                biasedOpener(`http://localhost:${port}/`, {preferredBrowsers:['chrome', 'firefox']});    
+            }
+            
         }
 );

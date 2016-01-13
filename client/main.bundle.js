@@ -80,13 +80,22 @@
 	}]);
 
 	fileSyncApp.controller('mainController', ['$scope','findDifferenceSvc','applyChangeSvc',($scope,findDifferenceSvc,applyChangeSvc)=>{
-	    $scope.diffs = [];
+	    var predefinedDir = {};
+	    if (location.search){
+	        predefinedDir = location.search.substring(1).split('&').reduce(function(prev, curr){prev[curr.split('=')[0]]=curr.split('=')[1]; return prev;}, {});
+	    }
 
+	    $scope.sourceDir = predefinedDir.sourceDir||undefined;
+	    $scope.targetDir = predefinedDir.targetDir||undefined;
+	    $scope.diffs = [];
+	    $scope.hideEqualFiles = true;
+	    $scope.comparing = false;
 	    $scope.compare = function(){
 	        if (!$scope.sourceDir||!$scope.targetDir){
 	            alert('Source and Target dir can not be empty')
 	        }else{
 	            $scope.diffs=[];
+	            $scope.comparing = true;
 	            findDifferenceSvc.query($scope.sourceDir, $scope.targetDir).then(
 	                (response)=> {
 	                    $scope.index={};
@@ -95,6 +104,10 @@
 	                        return prev;
 	                    }, {});
 	                    $scope.diffs = response.data;
+	                    $scope.comparing = false;
+	                },
+	                ()=> {
+	                    $scope.comparing=false;
 	                }
 	            )    
 	        }
@@ -108,6 +121,14 @@
 	        }
 	    }
 
+	    $scope.hideEquals = function(){
+	        if ($scope.hideEqualFiles){
+	            $scope.hideEqualFiles=false;
+	        }else{
+	            $scope.hideEqualFiles=true;
+	        }
+	    }
+
 	    $scope.applyChange = function(){
 	        if (!$scope.sourceDir||!$scope.targetDir){
 	            alert('Source and Target dir can not be empty')
@@ -117,7 +138,7 @@
 	            });
 
 	            applyChangeSvc.apply($scope.sourceDir, $scope.targetDir, data).then(
-	                ()=>alert('File updates successfully!'),
+	                ()=>alert('Operation finished successfully!'),
 	                (err)=>alert(`Error encounterred, check ${err.fromArchive} and ${err.toArchive} files to perform recovery`)
 	            );
 	        }
@@ -129,21 +150,28 @@
 	    return {
 	        template:`<div class='container'>
 	                    <div class='row'>
-	                        <label class='col-lg-6 text-center'>Source Directory</label>
-	                        <label class='col-lg-6 text-center'>Target Directory</label>
+	                        <label class='col-lg-5 text-center'>Source Directory</label>
+	                        <div class='col-lg-2'>
+	                            <div class='row'>
+	                            <span class='col-lg-1 glyphicon glyphicon-unchecked' ng-click='hideEquals()' ng-show='!hideEqualFiles'/>
+	                            <span class='col-lg-1 glyphicon glyphicon-check' ng-click='hideEquals()' ng-show='hideEqualFiles'/>
+	                            <span class='col-lg-10'>Hide identitcal files</span>
+	                            </div>
+	                        </div>
+	                        <label class='col-lg-5 text-center'>Target Directory</label>
 	                    </div>
 	                    <div class='row'>
 	                        <input id='sourceDir' ng-model='sourceDir' class='col-lg-5'/>
-	                        <button ng-click='compare()' class='col-lg-2'>Compare</button>
+	                        <button ng-click='compare()' class='col-lg-2' ng-disabled='comparing'>Compare</button>
 	                        <input id='targetDir' ng-model='targetDir' class='col-lg-5'/>
 	                        <button ng-click='applyChange()' style='position:absolute'>ApplyChange</button>
 	                    </div>
-	                    <div class='row' id="{{diff.file}}" ng-repeat='diff in diffs'>
+	                    <div class='row' id="{{diff.file}}" ng-repeat='diff in diffs' ng-show='!hideEqualFiles||diff.direction!=="=="' style='box-shadow: 0 0 2px black'>
 	                        <div class='col-lg-5'>
 	                            <div class='row'>
 	                                <span class='col-lg-1 glyphicon glyphicon-file' ng-show='diff.sourceName&&index.diffs[diff.file].type==="FILE"'/>
 	                                <span class='col-lg-1 glyphicon glyphicon-folder-open' ng-show='diff.sourceName&&index.diffs[diff.file].type==="DIR"'/>
-	                                <span class='col-lg-11' data-toggle="tooltip" title='Size:{{index.diffs[diff.file].sourceSize}}; Last Modified:{{index.diffs[diff.file].sourceTime}}'>{{diff.sourceName}}</span>
+	                                <span class='col-lg-11' data-toggle="tooltip" title='Size:{{index.diffs[diff.file].sourceSize}}; Last Modified:{{index.diffs[diff.file].sourceTime| date:"medium"}}'>{{diff.sourceName.substring(sourceDir.length)}}</span>
 	                            </div>
 	                        </div>
 	                        
@@ -154,7 +182,7 @@
 	                            <div class='row'>
 	                                <span class='col-lg-1 glyphicon glyphicon-file' ng-show='diff.targetName&&index.diffs[diff.file].type==="FILE"'/>
 	                                <span class='col-lg-1 glyphicon glyphicon-folder-open' ng-show='diff.targetName&&index.diffs[diff.file].type==="DIR"'/>
-	                                <span class='col-lg-11' data-toggle="tooltip" title='Size:{{index.diffs[diff.file].targetSize}}; Last Modified:{{index.diffs[diff.file].targetTime}}'>{{diff.targetName}}</span>
+	                                <span class='col-lg-11' data-toggle="tooltip" title='Size:{{index.diffs[diff.file].targetSize}}; Last Modified:{{index.diffs[diff.file].targetTime| date:"medium"}}'>{{diff.targetName.substring(targetDir.length)}}</span>
 	                            </div>
 	                        </div>
 	                    </div>
